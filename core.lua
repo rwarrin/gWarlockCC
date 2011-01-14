@@ -111,23 +111,21 @@ local function OnEvent(self, event, ...)
 			
 		end
 			
-		if(eventType == "SPELL_AURA_APPLIED") then
+		if(eventType == "SPELL_AURA_APPLIED" or eventType == "SPELL_AURA_REFRESH") then
 			if(spellID == 5782 and sourceName == UnitName("player")) then --  Fear
 				isFearing = true;
 				gwcc_Fear:SetValue(20);
-				gwcc['bars']['gwcc_Fear']['text']:SetText("Fear: " .. destName);
 			end
 			
 			if(spellID == 710 and sourceName == UnitName("player")) then --  Banish
 				isBanishing = true;
 				gwcc_Banish:SetValue(30);
-				gwcc['bars']['gwcc_Banish']['text']:SetText("Banish: " .. destName);
 			end
 			
 			if(spellID == 6358 and sourceName == UnitName("pet")) then --  Seduce
 				isSeducing = true;
 				gwcc_Seduce:SetValue(30);
-				gwcc['bars']['gwcc_Seduce']['text']:SetText("Seduce: " .. destName);
+				
 			end
 		end		
 	end
@@ -163,6 +161,7 @@ local function OnUpdate(self, elapsed)
 				isFearing = false;
 			else
 				gwcc_Fear:SetValue(newtime);
+				gwcc['bars']['gwcc_Fear']['text']:SetText("Fear: " .. floor(newtime));
 			end
 		end
 		
@@ -172,6 +171,7 @@ local function OnUpdate(self, elapsed)
 				isBanishing = false;
 			else
 				gwcc_Banish:SetValue(newtime);
+				gwcc['bars']['gwcc_Banish']['text']:SetText("Banish: " .. floor(newtime));
 			end
 		end
 		
@@ -181,6 +181,7 @@ local function OnUpdate(self, elapsed)
 				isSeducing = false;
 			else
 				gwcc_Seduce:SetValue(newtime);
+				gwcc['bars']['gwcc_Seduce']['text']:SetText("Seduce: " .. floor(newtime));
 			end
 		end
 		
