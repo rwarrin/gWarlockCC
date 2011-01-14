@@ -161,7 +161,7 @@ local function OnUpdate(self, elapsed)
 				isFearing = false;
 			else
 				gwcc_Fear:SetValue(newtime);
-				gwcc['bars']['gwcc_Fear']['text']:SetText("Fear: " .. floor(newtime));
+				gwcc['bars']['gwcc_Fear']['text']:SetText("Fear: " .. floor(newtime) .. "s");
 			end
 		end
 		
@@ -171,7 +171,7 @@ local function OnUpdate(self, elapsed)
 				isBanishing = false;
 			else
 				gwcc_Banish:SetValue(newtime);
-				gwcc['bars']['gwcc_Banish']['text']:SetText("Banish: " .. floor(newtime));
+				gwcc['bars']['gwcc_Banish']['text']:SetText("Banish: " .. floor(newtime) .. "s");
 			end
 		end
 		
@@ -181,7 +181,7 @@ local function OnUpdate(self, elapsed)
 				isSeducing = false;
 			else
 				gwcc_Seduce:SetValue(newtime);
-				gwcc['bars']['gwcc_Seduce']['text']:SetText("Seduce: " .. floor(newtime));
+				gwcc['bars']['gwcc_Seduce']['text']:SetText("Seduce: " .. floor(newtime) .. "s");
 			end
 		end
 		
