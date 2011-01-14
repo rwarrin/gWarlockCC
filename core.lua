@@ -1,7 +1,8 @@
+--  Create Frame
 local gwccFrame = CreateFrame("Frame", "gwccFrame", UIParent);
 gwccFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 
---  Create and stylize frame
+--  Stylize frame
 gwccFrame:SetBackdrop( {
 	bgFile = "Interface\\AddOns\\gWarlockCC\\Media\\flat.tga",
 	edgeFile = "Interface\\AddOns\\gWarlockCC\\Media\\flat.tga",
@@ -13,7 +14,7 @@ gwccFrame:EnableMouse(true);
 gwccFrame:SetMovable(true);
 gwccFrame:SetScript("OnDragStart", gwccFrame.StartMoving);
 gwccFrame:SetScript("OnDragStop", gwccFrame.StopMovingOrSizing);
-gwccFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 100, -100);
+gwccFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 186, -171);
 gwccFrame:SetBackdropColor(0.1, 0.1, 0.1, 1.0);
 gwccFrame:SetBackdropBorderColor(0.6, 0.6, 0.6, 1.0);
 gwccFrame:SetWidth(120);
@@ -25,13 +26,15 @@ gwccFrame:Hide();
 local UPDATE_INTERVAL = 0.5; --  Time in seconds
 
 -- Variables
-local timesincelastupdate = 0.0;
+local timeSinceLastUpdate = 0.0;
 local isBanishing = false;
 local isFearing = false;
 local isSeducing = false;
 local isFrameShowing = true;
 local feartargetid = 0;
 local gwccVisible = false;
+local gwcc = {};
+gwcc['bars'] = {};
 
 local function CreateGWCCTimer(buttonName, buttonText, point, relativeFrame, pointRel)	
 	frame = CreateFrame("StatusBar", buttonName, gwccFrame, nil);
@@ -59,13 +62,21 @@ local function CreateGWCCTimer(buttonName, buttonText, point, relativeFrame, poi
 	t = frame:CreateFontString(nil, "OVERLAY", frame);
 	t:SetFont("Interface\\AddOns\\gWarlockCC\\Media\\font.ttf", 10, "OUTLINE");
 	t:SetText(buttonText);
-	t:SetPoint("CENTER", frame, "CENTER", 0, 1);
+	t:SetPoint("CENTER", frame, "CENTER", 2, 1);
 	t:SetJustifyH("CENTER");
+	t:SetHeight(15);
+	t:SetWidth(108);
+	
+	gwcc['bars'][buttonName] = frame;
+	gwcc['bars'][buttonName]['text'] = t;
 end
 
+--  Create timer frames
 CreateGWCCTimer("gwcc_Fear", "Fear", "TOP", gwccFrame, "TOP");
 gwcc_Fear:SetMinMaxValues(0, 20);
 gwcc_Fear:SetValue(0);
+--gwcc_Fear:SetScript("OnEnter", function() gwcc['bars']['gwcc_Fear']['text']:SetText("LOLWUT"); end);
+--gwcc_Fear:SetScript("OnLeave", function() gwcc['bars']['gwcc_Fear']['text']:SetText("Fear"); end);
 
 CreateGWCCTimer("gwcc_Banish", "Banish", "TOP", gwcc_Fear, "BOTTOM");
 gwcc_Banish:SetMinMaxValues(0, 30);
@@ -80,19 +91,22 @@ local function OnEvent(self, event, ...)
 		local timeStamp, eventType, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags, spellID, spellName, spellSchool, amount, overkill = ...;
 		
 		if(eventType == "SPELL_AURA_REMOVED") then
-			if(spellID == 5782 and sourceName == UnitName("player")) then
+			if(spellID == 5782 and sourceName == UnitName("player")) then --  Fear
 				isFearing = false;
 				gwcc_Fear:SetValue(0);
+				gwcc['bars']['gwcc_Fear']['text']:SetText("Fear");
 			end
 			
-			if(spellID == 710 and sourceName == UnitName("player")) then
+			if(spellID == 710 and sourceName == UnitName("player")) then --  Banish
 				isBanishing = false;
 				gwcc_Banish:SetValue(0);
+				gwcc['bars']['gwcc_Banish']['text']:SetText("Banish");
 			end
 			
-			if(spellID == 6358 and sourceName == UnitName("pet")) then
+			if(spellID == 6358 and sourceName == UnitName("pet")) then --  Seduce
 				isSeducing = false;
 				gwcc_Seduce:SetValue(0);
+				gwcc['bars']['gwcc_Seduce']['text']:SetText("Seduce");
 			end
 			
 		end
@@ -101,16 +115,19 @@ local function OnEvent(self, event, ...)
 			if(spellID == 5782 and sourceName == UnitName("player")) then --  Fear
 				isFearing = true;
 				gwcc_Fear:SetValue(20);
+				gwcc['bars']['gwcc_Fear']['text']:SetText("Fear: " .. destName);
 			end
 			
-			if(spellID == 710 and sourceName == UnitName("player")) then -- Banish
+			if(spellID == 710 and sourceName == UnitName("player")) then --  Banish
 				isBanishing = true;
 				gwcc_Banish:SetValue(30);
+				gwcc['bars']['gwcc_Banish']['text']:SetText("Banish: " .. destName);
 			end
 			
-			if(spellID == 6358 and sourceName == UnitName("pet")) then
+			if(spellID == 6358 and sourceName == UnitName("pet")) then --  Seduce
 				isSeducing = true;
 				gwcc_Seduce:SetValue(30);
+				gwcc['bars']['gwcc_Seduce']['text']:SetText("Seduce: " .. destName);
 			end
 		end		
 	end
@@ -118,7 +135,7 @@ end
 
 
 local function OnUpdate(self, elapsed)
-	timesincelastupdate = timesincelastupdate + elapsed;
+	timeSinceLastUpdate = timeSinceLastUpdate + elapsed;
 	
 	--  Hide or show frames
 	if(isFearing == true) then
@@ -139,12 +156,7 @@ local function OnUpdate(self, elapsed)
 		gwcc_Seduce:Hide();
 	end
 	
-	if(UnitIsDead(feartargetid)) then
-		isFearing = false;
-		gwcc_Fear:SetValue(0);
-	end
-	
-	if(timesincelastupdate >= UPDATE_INTERVAL) then
+	if(timeSinceLastUpdate >= UPDATE_INTERVAL) then
 		if(isFearing == true) then
 			local newtime = gwcc_Fear:GetValue() - UPDATE_INTERVAL;
 			if(newtime < 0) then
@@ -172,7 +184,7 @@ local function OnUpdate(self, elapsed)
 			end
 		end
 		
-		timesincelastupdate = 0;
+		timeSinceLastUpdate = 0;
 	end
 end
 
@@ -189,7 +201,7 @@ local function gwcc_Toggle()
 	end
 end
 
--- Create slash command
+--  Create slash command
 SLASH_GWARLOCKCC1 = "/gwcc";
 SLASH_GWARLOCKCC2 = "/cc";
 SlashCmdList["GWARLOCKCC"] = function() gwcc_Toggle(); end
