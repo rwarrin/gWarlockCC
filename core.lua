@@ -75,8 +75,6 @@ end
 CreateGWCCTimer("gwcc_Fear", "Fear", "TOP", gwccFrame, "TOP");
 gwcc_Fear:SetMinMaxValues(0, 20);
 gwcc_Fear:SetValue(0);
---gwcc_Fear:SetScript("OnEnter", function() gwcc['bars']['gwcc_Fear']['text']:SetText("LOLWUT"); end);
---gwcc_Fear:SetScript("OnLeave", function() gwcc['bars']['gwcc_Fear']['text']:SetText("Fear"); end);
 
 CreateGWCCTimer("gwcc_Banish", "Banish", "TOP", gwcc_Fear, "BOTTOM");
 gwcc_Banish:SetMinMaxValues(0, 30);
