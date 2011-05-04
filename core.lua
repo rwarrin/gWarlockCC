@@ -1,4 +1,4 @@
---  Create Frame
+ -- Create Frame
 local gwccFrame = CreateFrame("Frame", "gwccFrame", UIParent);
 gwccFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 
@@ -86,7 +86,7 @@ gwcc_Seduce:SetValue(0);
 
 local function OnEvent(self, event, ...)
 	if(event == "COMBAT_LOG_EVENT_UNFILTERED") then
-		local timeStamp, eventType, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags, spellID, spellName, spellSchool, amount, overkill = ...;
+		local timeStamp, eventType, hideCaster, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags, spellID, spellName, spellSchool, amount, overkill = ...;
 		
 		if(eventType == "SPELL_AURA_REMOVED") then
 			if(spellID == 5782 and sourceName == UnitName("player")) then --  Fear
@@ -122,8 +122,7 @@ local function OnEvent(self, event, ...)
 			
 			if(spellID == 6358 and sourceName == UnitName("pet")) then --  Seduce
 				isSeducing = true;
-				gwcc_Seduce:SetValue(30);
-				
+				gwcc_Seduce:SetValue(30);			
 			end
 		end		
 	end
@@ -151,7 +150,7 @@ local function OnUpdate(self, elapsed)
 	else
 		gwcc_Seduce:Hide();
 	end
-	
+
 	if(timeSinceLastUpdate >= UPDATE_INTERVAL) then
 		if(isFearing == true) then
 			local newtime = gwcc_Fear:GetValue() - UPDATE_INTERVAL;
@@ -204,4 +203,3 @@ end
 SLASH_GWARLOCKCC1 = "/gwcc";
 SLASH_GWARLOCKCC2 = "/cc";
 SlashCmdList["GWARLOCKCC"] = function() gwcc_Toggle(); end
-
