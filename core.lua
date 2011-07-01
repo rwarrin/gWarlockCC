@@ -86,7 +86,7 @@ gwcc_Seduce:SetValue(0);
 
 local function OnEvent(self, event, ...)
 	if(event == "COMBAT_LOG_EVENT_UNFILTERED") then
-		local timeStamp, eventType, hideCaster, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags, spellID, spellName, spellSchool, amount, overkill = ...;
+		local timeStamp, eventType, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, amount, overkill = ...;
 		
 		if(eventType == "SPELL_AURA_REMOVED") then
 			if(spellID == 5782 and sourceName == UnitName("player")) then --  Fear
