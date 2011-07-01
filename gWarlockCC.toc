@@ -2,6 +2,6 @@
 ## Title: gWarlockCC
 ## Author: g0st
 ## Notes: Simple frame for tracking Warlock CC spells; Fear, Banish and Seduce.
-## Version: 0.0.1
+## Version: 1.1.0
 
 core.lua
