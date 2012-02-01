@@ -1,7 +1,7 @@
-## Interface: 40100
+## Interface: 40300
 ## Title: gWarlockCC
 ## Author: g0st
 ## Notes: Simple frame for tracking Warlock CC spells; Fear, Banish and Seduce.
-## Version: 1.1.0
+## Version: 1.1.1
 
 core.lua
